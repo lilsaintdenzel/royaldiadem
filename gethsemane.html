@@ -50,6 +50,37 @@
             z-index: 1;
         }
 
+          .back-home {
+  position: fixed;
+  top: 30px;
+  left: 30px;
+  z-index: 10;
+  opacity: 0;
+  animation: fadeIn 1s ease forwards 0.5s;
+}
+
+.back-home a {
+  display: inline-block;
+  padding: 12px 24px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(26, 26, 26, 0.4);
+  border-radius: 6px;
+  color: #1a1a1a;
+  text-decoration: none;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+}
+
+.back-home a:hover {
+  background: rgba(26, 26, 26, 0.8);
+  color: #c9b9a0;
+  border-color: #1a1a1a;
+  transform: translateX(-3px);
+}
+
+
         .container {
             max-width: 900px;
             width: 100%;
