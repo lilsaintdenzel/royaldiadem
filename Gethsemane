@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>gethsemane: a visual theology</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #c9b9a0;
+            font-family: 'Courier New', monospace;
+            color: #1a1a1a;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,.03) 2px, rgba(0,0,0,.03) 4px),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,.03) 2px, rgba(0,0,0,.03) 4px);
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='3' numOctaves='3' /%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: transparent;
+            padding: 60px 40px;
+            border-radius: 10px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .title {
+            font-size: 4rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 10px;
+            opacity: 0;
+            animation: fadeInDown 1.5s ease forwards;
+        }
+
+        .subtitle {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fadeInDown 1.5s ease forwards 0.3s;
+        }
+
+        .tagline {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 60px;
+            opacity: 0;
+            animation: fadeIn 1.5s ease forwards 0.6s;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .section {
+            opacity: 0;
+            animation: slideUp 1s ease forwards;
+        }
+
+        .section:nth-child(1) { animation-delay: 1s; }
+        .section:nth-child(2) { animation-delay: 1.3s; }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #1a1a1a;
+            animation: expandWidth 1s ease forwards;
+            animation-delay: inherit;
+        }
+
+        .section:nth-child(1) .section-title::after { animation-delay: 1.5s; }
+        .section:nth-child(2) .section-title::after { animation-delay: 1.8s; }
+
+        .section p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+
+        .highlight {
+            font-weight: bold;
+            position: relative;
+            display: inline-block;
+        }
+
+        .highlight::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #1a1a1a;
+            transform: scaleX(0);
+            animation: underline 0.8s ease forwards;
+            animation-delay: 2s;
+        }
+
+        .emphasis {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 40px 0 20px;
+            line-height: 1.2;
+            grid-column: 1 / -1;
+            text-align: center;
+            opacity: 0;
+            animation: scaleIn 1s ease forwards 2.5s;
+        }
+        
+        .vertical-line {
+            width: 2px;
+            height: 80px;
+            background: #1a1a1a;
+            margin: 30px auto;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards 2s;
+        }
+        
+        .vertical-line-divider {
+            grid-column: 1 / -1;
+            width: 2px;
+            height: 100px;
+            background: #1a1a1a;
+            margin: 20px auto;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards 2s;
+        }
+
+        .closing {
+            grid-column: 1 / -1;
+            margin-top: 20px;
+            opacity: 0;
+            animation: fadeIn 1.5s ease forwards 3s;
+        }
+
+        .closing p {
+            margin-bottom: 15px;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes expandWidth {
+            from { width: 0; }
+            to { width: 60px; }
+        }
+
+        @keyframes underline {
+            from { transform: scaleX(0); }
+            to { transform: scaleX(1); }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .grain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.25;
+            z-index: 3;
+            mix-blend-mode: multiply;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='4' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        @keyframes grain {
+            0%, 100% { transform: translate(0, 0); }
+            10% { transform: translate(-5%, -10%); }
+            20% { transform: translate(-15%, 5%); }
+            30% { transform: translate(7%, -25%); }
+            40% { transform: translate(-5%, 25%); }
+            50% { transform: translate(-15%, 10%); }
+            60% { transform: translate(15%, 0%); }
+            70% { transform: translate(0%, 15%); }
+            80% { transform: translate(3%, 35%); }
+            90% { transform: translate(-10%, 10%); }
+        }
+
+        @media (max-width: 768px) {
+            .title { font-size: 2.5rem; }
+            .subtitle { font-size: 2rem; }
+            .content { grid-template-columns: 1fr; gap: 30px; }
+            .container { padding: 40px 25px; }
+            .emphasis { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="grain"></div>
+    
+    <div class="container">
+        <div class="title">gethsemane:</div>
+        <div class="subtitle">the garden of surrender.</div>
+        <div class="tagline">Where anguish met obedience.</div>
+
+        <div class="content">
+            <div class="section">
+                <p><span class="highlight">Gethsemane means "oil press."</span></p>
+                <p>A garden on the Mount of Olives where olives were crushed to extract oil. Where pressure revealed what was inside. Where Jesus went to pray the night before his crucifixion, knowing what was coming.</p>
+                <p>This is where the weight became real.</p>
+                <p>Not in the courtroom. Not on the cross. Here first. In the garden. In the dark. Sweating blood—hematidrosis, a rare condition where extreme anguish causes blood vessels to rupture into sweat glands. Asking if there was any other way. The cup. The burden. The full weight of human sin and divine justice pressing down.</p>
+                <p>He could have left. He could have called legions of angels. He could have said no.</p>
+                <p>But he stayed. And he prayed. "Not my will, but yours be done."</p>
+            </div>
+
+            <div class="section">
+                <p>This is the moment that changes everything.</p>
+                <p>Because Gethsemane is where obedience was chosen in the face of unbearable cost. Where love proved stronger than fear. Where the Son of God wrestled with what it meant to be fully human and fully divine.</p>
+                <p>We often skip this part. We go straight from Palm Sunday to Good Friday, from triumph to execution. But Gethsemane is where the real battle was fought. In prayer. In submission. In the crushing weight of what was to come. The King who would wear a crown of thorns instead of a royal diadem.</p>
+                <p>The oil press. The place where everything inside is brought to the surface. Where there's nowhere to hide. Where the truth of what you're made of is revealed under pressure.</p>
+            </div>
+
+            <div class="emphasis">
+                THE GARDEN WHERE<br>
+                SURRENDER BECAME VICTORY
+            </div>
+
+            <div class="closing">
+                <p>Gethsemane reminds us that obedience is costly. That following Jesus means going to your own garden, facing your own crushing weight, and choosing "not my will, but yours." It's where we learn that the Christian life isn't about avoiding suffering but about meeting it with faith. About staying when everything in us wants to run.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
