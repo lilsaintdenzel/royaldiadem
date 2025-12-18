@@ -304,18 +304,56 @@
         }
 
         .page-dot {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            margin: 0 5px;
-            transition: all 0.3s ease;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            margin: 0 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #ffd700;
         }
 
-        .page-dot.active {
-            background: #ffd700;
-            transform: scale(1.3);
+        .page-dot svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .page-dot circle {
+            fill: none;
+            stroke-width: 3;
+        }
+
+        .circle-bg {
+            stroke: rgba(255, 255, 255, 0.1);
+        }
+
+        .circle-progress {
+            stroke: #ffd700;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.6s ease, transform 0.4s ease;
+            filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.4));
+        }
+
+        .page-number {
+            position: relative;
+            z-index: 1;
+            transition: transform 0.4s ease;
+        }
+
+        .page-dot:hover .page-number {
+            transform: scale(1.15);
+        }
+
+        .page-dot:hover .circle-progress {
+            filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.6));
         }
 
         .writing-card.hidden {
@@ -398,9 +436,16 @@
         <div class="pagination">
             <button class="page-btn" id="prevBtn" disabled>← Previous</button>
             <div class="page-indicator">
-                <span class="page-dot active" data-dot="0"></span>
-                <span class="page-dot" data-dot="1"></span>
-                <span class="page-dot" data-dot="2"></span>
+                <div class="page-dot" id="pageCircle">
+                    <svg viewBox="0 0 50 50">
+                        <circle class="circle-bg" cx="25" cy="25" r="20"></circle>
+                        <circle class="circle-progress" cx="25" cy="25" r="20" 
+                                stroke-dasharray="125.6" 
+                                stroke-dashoffset="125.6" 
+                                id="progressCircle"></circle>
+                    </svg>
+                    <span class="page-number" id="pageNumber">1</span>
+                </div>
             </div>
             <button class="page-btn" id="nextBtn">Next →</button>
         </div>
@@ -414,12 +459,17 @@
         let currentPage = 0;
         const totalPages = 3;
         const cards = document.querySelectorAll('.writing-card');
-        const dots = document.querySelectorAll('.page-dot');
+        const pageNumber = document.getElementById('pageNumber');
+        const progressCircle = document.getElementById('progressCircle');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
         const searchInput = document.getElementById('searchInput');
         const searchResults = document.getElementById('searchResults');
         const pagination = document.querySelector('.pagination');
+
+        // Calculate circle circumference (2 * PI * radius)
+        const radius = 20;
+        const circumference = 2 * Math.PI * radius;
 
         // Search data
         const writings = [
@@ -467,14 +517,12 @@
                 currentCard.classList.remove('hidden');
             }
 
-            // Update dots
-            dots.forEach(dot => {
-                dot.classList.remove('active');
-            });
-            const activeDot = document.querySelector(`[data-dot="${pageNum}"]`);
-            if (activeDot) {
-                activeDot.classList.add('active');
-            }
+            // Update circular progress bar
+            const progress = ((pageNum + 1) / totalPages);
+            const offset = circumference - (progress * circumference);
+            
+            progressCircle.style.strokeDashoffset = offset;
+            pageNumber.textContent = pageNum + 1;
 
             // Update buttons
             prevBtn.disabled = pageNum === 0;
@@ -539,14 +587,6 @@
             if (currentPage < totalPages - 1) {
                 showPage(currentPage + 1);
             }
-        });
-
-        dots.forEach(dot => {
-            dot.addEventListener('click', () => {
-                const pageNum = parseInt(dot.dataset.dot);
-                showPage(pageNum);
-            });
-            dot.style.cursor = 'pointer';
         });
 
         // Initialize
