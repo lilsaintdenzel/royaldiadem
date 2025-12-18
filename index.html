@@ -117,6 +117,18 @@
             text-transform: uppercase;
         }
 
+        .writings-count {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #666;
+            letter-spacing: 1px;
+        }
+
+        .writings-count span {
+            color: #ffd700;
+            font-weight: bold;
+        }
+
         .writings-grid {
             display: flex;
             flex-wrap: wrap;
@@ -386,6 +398,7 @@
         <div class="header">
             <h1 class="main-title">visual theology</h1>
             <p class="main-subtitle">Meditations on sacred truth</p>
+            <p class="writings-count"><span id="writingsCount"></span> writings available</p>
             <div class="search-container">
                 <input 
                     type="text" 
@@ -457,7 +470,6 @@
 
     <script>
         let currentPage = 0;
-        const totalPages = 3;
         const cards = document.querySelectorAll('.writing-card');
         const pageNumber = document.getElementById('pageNumber');
         const progressCircle = document.getElementById('progressCircle');
@@ -500,8 +512,13 @@
         }
         ];
 
-        let filteredPages = [0, 1, 2];
+        // Dynamic total pages based on writings array
+        const totalPages = writings.length;
+        let filteredPages = writings.map((w, i) => i);
         let isSearchActive = false;
+
+        // Update writings count display
+        document.getElementById('writingsCount').textContent = totalPages;
 
         function showPage(pageNum) {
             if (isSearchActive) return;
@@ -537,7 +554,7 @@
             if (query === '') {
                 // Reset to normal pagination
                 isSearchActive = false;
-                filteredPages = [0, 1, 2];
+                filteredPages = writings.map((w, i) => i);
                 cards.forEach(card => card.classList.add('hidden'));
                 searchResults.textContent = '';
                 pagination.style.display = 'flex';
