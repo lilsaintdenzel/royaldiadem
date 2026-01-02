@@ -123,5 +123,26 @@ export const writings = [
       "fruit of the Spirit"
     ],
     href: "slow-is-kingdom.html"
-  }
+  },
+{
+    page: 6,
+    title: "righteousness, peace, and joy",
+    subtitle: "the foundation of His throne",
+    scripture: "Romans 14:17",
+    excerpt: "The foundation of His throne is righteousness. From this right standing with God we experience peace. And from this peace, joy overflows. Joy is simply the expression of inner peace.",
+    keywords: [
+      "righteousness",
+      "peace",
+      "joy",
+      "Kingdom",
+      "throne",
+      "Holy Spirit",
+      "progression",
+      "foundation",
+      "inner peace",
+      "right standing"
+    ],
+    href: "righteousness-peace-joy.html"
+}
+  
 ];
