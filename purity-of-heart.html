@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>purity of heart: a visual theology</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0f;
+            font-family: 'Courier New', monospace;
+            color: #c0c0d0;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,.02) 2px, rgba(255,255,255,.02) 4px),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,.02) 2px, rgba(255,255,255,.02) 4px);
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='3' numOctaves='3' /%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: transparent;
+            padding: 60px 40px;
+            border-radius: 10px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .title {
+            font-size: 4rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 10px;
+            opacity: 0;
+            animation: fadeInDown 1.5s ease forwards;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            color: #e8e8f0;
+        }
+
+        .subtitle {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fadeInDown 1.5s ease forwards 0.3s;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            color: #e8e8f0;
+        }
+
+        .tagline {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 60px;
+            opacity: 0;
+            animation: fadeIn 1.5s ease forwards 0.6s;
+            color: #f0f0f8;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .section {
+            opacity: 0;
+            animation: slideUp 1s ease forwards;
+        }
+
+        .section:nth-child(1) { animation-delay: 1s; }
+        .section:nth-child(2) { animation-delay: 1.2s; }
+        .section:nth-child(3) { animation-delay: 1.4s; }
+        .section:nth-child(4) { animation-delay: 1.6s; }
+        .section:nth-child(5) { animation-delay: 1.8s; }
+
+        .section p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+            color: #e0e0e8;
+        }
+
+        .highlight {
+            font-weight: bold;
+            position: relative;
+            display: inline-block;
+            color: #f0f0f8;
+        }
+
+        .highlight::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #c0c0d0;
+            transform: scaleX(0);
+            animation: underline 0.8s ease forwards;
+            animation-delay: 2s;
+        }
+
+        .divider {
+            width: 60px;
+            height: 2px;
+            background: #c0c0d0;
+            margin: 30px 0;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards;
+        }
+
+        .section:nth-child(1) .divider { animation-delay: 1.5s; }
+        .section:nth-child(2) .divider { animation-delay: 1.7s; }
+        .section:nth-child(3) .divider { animation-delay: 1.9s; }
+        .section:nth-child(4) .divider { animation-delay: 2.1s; }
+
+        .emphasis {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 40px 0 20px;
+            line-height: 1.2;
+            text-align: center;
+            opacity: 0;
+            animation: scaleIn 1s ease forwards 2.5s;
+            color: #f0f0f8;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes underline {
+            from { transform: scaleX(0); }
+            to { transform: scaleX(1); }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .grain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.25;
+            z-index: 3;
+            mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='4' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .back-home {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            z-index: 10;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards 0.5s;
+        }
+
+        .back-home a {
+            display: inline-block;
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(192, 192, 208, 0.4);
+            border-radius: 6px;
+            color: #c0c0d0;
+            text-decoration: none;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .back-home a:hover {
+            background: rgba(192, 192, 208, 0.2);
+            color: #f0f0f8;
+            border-color: #c0c0d0;
+            transform: translateX(-3px);
+        }
+
+        @media (max-width: 768px) {
+            .title { font-size: 2.5rem; }
+            .subtitle { font-size: 2rem; }
+            .container { padding: 40px 25px; }
+            .emphasis { font-size: 1.4rem; }
+            .back-home { top: 15px; left: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="grain"></div>
+    <div class="back-home">
+        <a href="index.html">← Back</a>
+    </div>
+
+    <div class="container">
+        <div class="title">purity of heart:</div>
+        <div class="subtitle">to will one thing.</div>
+        <div class="tagline">Undivided desire for God.</div>
+
+        <div class="content">
+            <div class="section">
+                <p><span class="highlight">Purity of heart is the ability to will one thing.</span> To desire God without division. To seek Him not as a means, but as the end.</p>
+                <p><em>"Blessed are the pure in heart, for they shall see God."</em> — Matthew 5:8</p>
+                <p>Purity is not first about outward restraint, but inward direction—what the heart chooses to behold.</p>
+                <div class="divider"></div>
+            </div>
+
+            <div class="section">
+                <p><span class="highlight">The heart becomes what it beholds.</span> Its condition mirrors its gaze.</p>
+                <p><em>"As a man thinks in his heart, so is he."</em> — Proverbs 23:7</p>
+                <p><em>"Where your treasure is, there your heart will be also."</em> — Matthew 6:21</p>
+                <p>What the heart repeatedly looks upon, it slowly loves. What it loves, it begins to resemble.</p>
+                <div class="divider"></div>
+            </div>
+
+            <div class="section">
+                <p>If the heart beholds worthless things, its sensitivity to God grows dull.</p>
+                <p><em>"They exchanged the glory of the immortal God for images…"</em> — Romans 1:23</p>
+                <p><em>"My people have committed two evils: they have forsaken Me, the fountain of living waters, and hewed out cisterns that can hold no water."</em> — Jeremiah 2:13</p>
+                <p>Empty sights hollow the soul. Shallow affections weaken spiritual depth.</p>
+                <div class="divider"></div>
+            </div>
+
+            <div class="section">
+                <p>But when the heart beholds the priceless Christ—when Jesus becomes its chief vision—everything changes.</p>
+                <p><em>"We all, with unveiled face, beholding the glory of the Lord, are being transformed into the same image."</em> — 2 Corinthians 3:18</p>
+                <p><em>"I count everything as loss because of the surpassing worth of knowing Christ Jesus my Lord."</em> — Philippians 3:8</p>
+                <p>Beholding is not passive. It is formative.</p>
+                <div class="divider"></div>
+            </div>
+
+            <div class="section">
+                <p>To delight in the dealings of God is to welcome His discipline, His shaping, His fire.</p>
+                <p><em>"My son, do not despise the Lord's discipline… for the Lord disciplines the one He loves."</em> — Hebrews 12:5–6</p>
+                <p><em>"He will sit as a refiner and purifier of silver."</em> — Malachi 3:3</p>
+                <p>The pure heart does not flee God's hand—it trusts it.</p>
+            </div>
+
+            <div class="emphasis">
+                THE HEART THAT BEHOLDS CHRIST<br>
+                IS CONFORMED TO CHRIST
+            </div>
+
+            <div class="section">
+                <p><em>"Delight yourself in the Lord, and He will give you the desires of your heart."</em> — Psalm 37:4</p>
+                <p><em>"Create in me a clean heart, O God, and renew a right spirit within me."</em> — Psalm 51:10</p>
+                <p>Purity is not perfection. It is direction. A heart set on one thing—to see Him, to know Him, to become like Him.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
